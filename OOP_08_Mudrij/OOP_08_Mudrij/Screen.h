@@ -1,0 +1,79 @@
+#include <iostream>
+
+using namespace std;
+
+class Screen
+{
+private:
+	//Максимальна висота екрану
+	static const int maxHeight;
+	//Максимальна ширина екрану
+	static const int maxWidth;
+	//Наповнювач
+	static const char _filler;
+
+	//Фактична висота екрану
+	int _height;
+	//Фактична ширина екрану
+	int _width;
+
+	//Наповнення екрану
+	char *_wContent;
+	//Курсор
+	mutable int _cursor;
+
+	//Копіювання екранів не передбачене
+	Screen(const Screen&);
+	Screen& operator= (const Screen&);
+public:
+	//Екран заповнюється рядком pc,
+	//якщо він заданий, інакше він наповнюється
+	//наповнювачем _filler
+	Screen(int width = 10, int height = 10, char* pc = 0);
+	~Screen();
+
+	//Сталі та їм однойменні методи
+	//Перевести курсор на початок екрану
+	const Screen& home() const;
+	Screen& home();
+
+	//Посунути курсор на один символ вправо
+	const Screen& move() const;
+	Screen& move();
+
+	//Посунути курсор на один символ вліво
+	const Screen& back() const;
+	Screen& back();
+
+	//Показати вміст екрану
+	const Screen& show() const;
+	Screen& show();
+
+	//Перенести курсор на задану позицію
+	const Screen& move(int, int) const;
+	Screen& move(int, int);
+
+	//Очиститиекран
+	Screen& clear();
+
+	//Показати символ, на якому знаходиться курсор
+	const Screen& showCurrent() const;
+
+	//Селектор
+	char get() const;
+	//Модифікатор
+	Screen& set(char);
+
+	//Додаткові методи для виконання практичної
+	const int& width() const { return _width; }
+	const int& height() const { return _height; }
+	const char* content() const { return _wContent; }
+};
+
+ostream& operator<<(ostream&, const Screen&);
+
+typedef const Screen& (Screen::* const ConstAction) () const;
+typedef Screen& (Screen::* const NonConstAction) ();
+
+void doActionConst(const Screen& s, ConstAction act, int n);
+void doActionNonConst(Screen& s, NonConstAction act, int n);
